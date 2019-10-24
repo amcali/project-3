@@ -9,14 +9,25 @@ app = Flask(__name__)
 def home():
     return render_template('index.template.html')
 
-@app.route('/restaurants')
-def restaurants():
-    return render_template('restaurants.template.html')
-    
+
+#Route to show the 'add/create restaurant' form    
 @app.route('/add_restaurant')
 def add_restaurant():
-    return render_template('add-restaurant.template.html')    
+    return render_template('add-restaurant.template.html')   
     
+#Route to process the 'add/create restaurant' form
+@app.route('/add_restaurant', methods=['POST'])
+def process_add_restaurant():
+    restaurant_name = request.form.get('restaurant_name')
+    restaurant_address = request.form.get('restaurant_address')
+    
+    #Checking whether the requested fields are being received
+    return restaurant_name +  ", " + restaurant_address
+
+#Route to show created / added restaurants
+@app.route('/restaurants')
+def restaurants():
+    return render_template('restaurants.template.html')    
 
 # 1. Retrieve the environment variables
 MONGO_URI = os.getenv('MONGO_URI')
