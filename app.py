@@ -8,26 +8,15 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('index.template.html')
-    
-    # search_terms = request.args.get('search-by')
-    # country = request.args.get('country')
-    # must_have = request.args.getlist('must-have')
-    
-    # countries = ["Singapore", "Canada", "New Zealand", "Malaysia", "Ireland"]
-    # amentities = ["Internet", "Washer", "Waterfront","Step-free access"]
 
-    # search_criteria = {}
-    # print (search_criteria)
-    # if search_terms is not None and search_terms is not "":
-    #     search_criteria["name"] = re.compile(r'{}'.format(search_terms), re.I)
-
-    # if country != None and country != "Any":
-    #     search_criteria['address.country'] = country 
-        
-    # if len(must_have) > 0:
-    #     search_criteria['amenities'] = {
-    #         '$all' : must_have 
-    #     }    
+@app.route('/restaurants')
+def restaurants():
+    return render_template('restaurants.template.html')
+    
+@app.route('/add_restaurant')
+def add_restaurant():
+    return render_template('add-restaurant.template.html')    
+    
 
 # 1. Retrieve the environment variables
 MONGO_URI = os.getenv('MONGO_URI')
