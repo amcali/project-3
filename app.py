@@ -4,6 +4,24 @@ import os
 
 app = Flask(__name__)
 
+# 1. Retrieve the environment variables
+MONGO_URI = os.getenv('MONGO_URI')
+DATABASE_NAME = 'restaurant_reviews'
+RESTAURANTS = 'restaurants'
+
+# 2. Create the connection
+conn = pymongo.MongoClient(MONGO_URI)
+
+# 3. Query
+# doc = conn[DATABASE_NAME]["listingsAndReviews"].find({
+#     'address.country':'Canada'
+# }).limit(10)
+
+# for d in doc:
+#     print("Name:", d['name'])
+#     print("Price: $", d['price'])
+#     print('-------')
+
 # Flask Routes Begin Here
 @app.route('/')
 def home():
@@ -21,30 +39,20 @@ def process_add_restaurant():
     restaurant_name = request.form.get('restaurant_name')
     restaurant_address = request.form.get('restaurant_address')
     
-    #Checking whether the requested fields are being received
-    return restaurant_name +  ", " + restaurant_address
+    #Create a new restaurant
+    conn[DATABASE_NAME][RESTAURANTS].insert({
+        'restaurant_name': restaurant_name,
+        'restaurant_address': restaurant_address
+    })
+
+    return redirect(url_for('home'))
 
 #Route to show created / added restaurants
 @app.route('/restaurants')
 def restaurants():
     return render_template('restaurants.template.html')    
 
-# 1. Retrieve the environment variables
-MONGO_URI = os.getenv('MONGO_URI')
-DATABASE_NAME = 'restaurant_reviews'
 
-# 2. Create the connection
-conn = pymongo.MongoClient(MONGO_URI)
-
-# 3. Query
-# doc = conn[DATABASE_NAME]["listingsAndReviews"].find({
-#     'address.country':'Canada'
-# }).limit(10)
-
-# for d in doc:
-#     print("Name:", d['name'])
-#     print("Price: $", d['price'])
-#     print('-------')
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
