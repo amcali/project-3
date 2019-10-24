@@ -50,7 +50,10 @@ def process_add_restaurant():
 #Route to show created / added restaurants
 @app.route('/restaurants')
 def restaurants():
-    return render_template('restaurants.template.html')    
+    # Fetch all the existing todos as a Python dictionary
+    results = conn[DATABASE_NAME][RESTAURANTS].find({})
+    #Return a template and assign the results to a placeholder in that template
+    return render_template('restaurants.template.html', data=results)    
 
 
 

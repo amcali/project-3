@@ -5,5 +5,19 @@
 {%block content%}
     <a href ="/">Home</a> 
     <a href ="/add_restaurant">Add Restaurant</a>
+    
+    {% for d in data %}
+        <div class="card mt-3 mb-3">
+            <div class="card-header">{{ d['restaurant_name'] }}</div>
+            <div class="card-body">
+                {% if d['restaurant_address'] %}
+                {{ d['restaurant_address'] }}
+                {% else %}
+                <span class='default-description'>No description available</span>
+                {% endif %}
+            </div>
+        <div class="card-footer">
+        </div>
+    {% endfor %}                
 
 {%endblock%}
