@@ -24,9 +24,16 @@ conn = pymongo.MongoClient(MONGO_URI)
 
 # Flask Routes Begin Here
 @app.route('/')
-def home():
+def index():
     return render_template('index.template.html')
 
+#Route to show existing restaurants in Mongo
+@app.route('/restaurants')
+def restaurants():
+    # Fetch all the existing todos as a Python dictionary
+    results = conn[DATABASE_NAME][RESTAURANTS].find({})
+    #Return a template and assign the results to a placeholder in that template
+    return render_template('restaurants.template.html', data=results)
 
 #Route to show the 'add/create restaurant' form    
 @app.route('/add_restaurant')
@@ -38,22 +45,21 @@ def add_restaurant():
 def process_add_restaurant():
     restaurant_name = request.form.get('restaurant_name')
     restaurant_address = request.form.get('restaurant_address')
+    business_hours = request.form.get('business_hours')
+    telephone = request.form.get('telephone')
+    email_address = request.form.get('email_address')
     
     #Create a new restaurant
     conn[DATABASE_NAME][RESTAURANTS].insert({
         'restaurant_name': restaurant_name,
-        'restaurant_address': restaurant_address
+        'restaurant_address': restaurant_address,
+        'business_hours': business_hours,
+        'telephone': telephone,
+        'email_address': email_address
     })
 
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
-#Route to show created / added restaurants
-@app.route('/restaurants')
-def restaurants():
-    # Fetch all the existing todos as a Python dictionary
-    results = conn[DATABASE_NAME][RESTAURANTS].find({})
-    #Return a template and assign the results to a placeholder in that template
-    return render_template('restaurants.template.html', data=results)    
 
 
 

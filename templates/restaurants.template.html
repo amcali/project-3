@@ -1,6 +1,6 @@
 {%extends "layout.template.html"%}
 
-{% block title %}RESTAURANTS{% endblock %}
+{% block title %}RESTAURANT LISTINGS{% endblock %}
 
 {%block content%}
     <a href ="/">Home</a> 
@@ -10,11 +10,11 @@
         <div class="card mt-3 mb-3">
             <div class="card-header">{{ d['restaurant_name'] }}</div>
             <div class="card-body">
-                {% if d['restaurant_address'] %}
-                {{ d['restaurant_address'] }}
-                {% else %}
-                <span class='default-description'>No description available</span>
-                {% endif %}
+                <!--{% if d['restaurant_address'] %}-->
+                {{ d['restaurant_address'], d['business_hours'], d['telephone'], d['email_address']}}
+                <!--{% else %}-->
+                <!--<span class='default-description'>No description available</span>-->
+                <!--{% endif %}-->
             </div>
         <div class="card-footer">
         </div>
