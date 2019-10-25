@@ -9,32 +9,5 @@
     <a href ="/restaurants">Restaurants</a> |
     <a href ="/add_restaurant" href={{url_for('add_restaurant')}}>Add Restaurant</a>
     
-        <table class='table'>
-            <thead>
-                <tr>
-                    <th>Restaurant</th>
-                
-                    <th>Address</th>
-                    
-                    <th>Business Hours</th>
-                    
-                    <th>Telephone</th>
-                </tr>
-            </thead>
-            {% for each_result in results %}
-            <tr>
-                <td>
-                    {{ each_result["name"] }}
-                </td>
-                <td>
-                    {{ each_result["address"]["country"] }}
-                </td>
-                <td>
-                    {% for each_amentity in each_result['amenities'] %}
-                    <span>{{each_amentity }}</span>,
-                    {%endfor%}
-                </td>
-            </tr>
-            {%endfor%}
-        </table>
+
 {%endblock%}        
