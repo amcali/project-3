@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 import pymongo 
 import os
+import re
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
@@ -55,8 +57,6 @@ def restaurants():
 def add_restaurant():
     return render_template('add-restaurant.template.html')   
 
-
-
     
 #Route to process the 'add/create restaurant' form
 @app.route('/add_restaurant', methods=['POST'])
@@ -70,7 +70,6 @@ def process_add_restaurant():
     filename = images_upload_set.save(image) #2 -- save uploaded image    
 
 
-    
     #Create a new restaurant
     conn[DATABASE_NAME][RESTAURANTS].insert({
         'restaurant_name': restaurant_name,
@@ -83,6 +82,16 @@ def process_add_restaurant():
 
     return redirect(url_for('index'))
 
+
+
+#Route to show a restaurant's reviews on a new page
+@app.route('/reviews/<restaurant_id>')
+def get_restaurant_reviews(restaurant_id):
+    result = conn[DATABASE_NAME][RESTAURANTS].find_one({
+        '_id': ObjectId(restaurant_id)
+    })
+    # print(result)
+    return render_template("restaurant_reviews.template.html", result=result)    
 
 
 

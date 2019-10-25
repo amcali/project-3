@@ -7,21 +7,27 @@
     <a href ="/add_restaurant">Add Restaurant</a>
     
     {% for d in data %}
-        <div class="card mt-3 mb-3">
-            <div class="card-header">{{ d['restaurant_name'] }}</div>
+    <div class="row">
+        <div class="card mt-3 mb-3" style="width: 18rem;">
+            <div class="card-header" value={{d['restaurant_name']}}>
+                <a href="{{url_for('get_restaurant_reviews', restaurant_id=d['_id'])}}">   
+                    {{ d['restaurant_name']}}
+                </a>
+            </div>
+            <image src="{{d['image_url']}}" class="card-img-top"> 
             <div class="card-body">
                 <!--{% if d['restaurant_address'] %}-->
-                <image src="{{d['image_url']}}" class="img-thumbnail" />                
-                {{ d['restaurant_address']}}
-                {{d['business_hours']}}
-                {{d['telephone']}}
-                {{d['email_address']}}
+                <p>{{ d['restaurant_address']}}</p>
+                <p>{{d['business_hours']}}</p>
+                <p>{{d['telephone']}}</p>
+                <p>{{d['email_address']}}</p>
                 <!--{% else %}-->
                 <!--<span class='default-description'>No description available</span>-->
                 <!--{% endif %}-->
             </div>
-        <div class="card-footer">
+        <!--<div class="card-footer"></div>-->
         </div>
     {% endfor %}                
-
+    </div>
+    
 {%endblock%}
