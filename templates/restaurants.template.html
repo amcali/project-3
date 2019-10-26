@@ -4,7 +4,7 @@
 
 {%block content%}
     <a href ="/">Home</a> 
-    <a href ="/add_restaurant">Add Restaurant</a>
+    <a href ={{url_for('create_new_restaurant')}}>Add Restaurant</a>
     
     {% for d in data %}
     <div class="row">

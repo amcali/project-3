@@ -49,13 +49,13 @@ def restaurants():
 
 
 #Route to show the 'create restaurant' form    
-@app.route('/new_restaurant')
+@app.route('/restaurant/new')
 def create_new_restaurant():
     return render_template('new_restaurant.html')   
 
     
 #Route to process the 'create restaurant' form
-@app.route('/new_restaurant', methods=['POST'])
+@app.route('/restaurant/new', methods=['POST'])
 def process_new_restaurant():
     restaurant_name = request.form.get('restaurant_name')
     restaurant_address = request.form.get('restaurant_address')
@@ -81,6 +81,18 @@ def process_new_restaurant():
 
     return redirect(url_for('index'))
 
+
+"""Route to display a selected restaurant for updating"""
+@app.route('/restaurant/<restaurant_id>/update')
+def update_restaurant(restaurant_id):
+    
+    """Use MongoDB to find the object by id. We will receive the results as a dictionary using the find_one method"""
+    result = conn[DATABASE_NAME][RESTAURANTS].find_one({
+        '_id': ObjectId(restaurant_id)
+    })
+    """rendering template with existing information on selected restaurant"""
+    return render_template('update_restaurant.html', data=result)
+    
 
 
 #Route to show an individual restaurant's reviews on a new page

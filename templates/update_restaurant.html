@@ -1,0 +1,11 @@
+{%extends "layout.template.html"%}
+
+{% block title %}ADD A RESTAURANT{% endblock %}
+
+{%block content%}
+    <form class="form m-3" enctype="multipart/form-data" method="POST">
+        {%include "restaurant_form.template.html"%}
+        <input type='submit' value='Update' class='btn btn-primary' />
+    </form>        
+
+{%endblock%}
