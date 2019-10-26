@@ -3,9 +3,11 @@ from flask_uploads import UploadSet, IMAGES, configure_uploads
 import pymongo 
 import os
 import re
-from bson.objectid import ObjectId
+from bson.objectid import ObjectId 
+
 
 app = Flask(__name__)
+
 
 #configure uploads
 TOP_LEVEL_DIR = os.path.abspath(os.curdir)
@@ -18,84 +20,81 @@ images_upload_set = UploadSet('images', IMAGES)
 configure_uploads(app, images_upload_set)
 #end configure uploads
 
-# 1. Retrieve the environment variables
+
+# Retrieving the environment variables
 MONGO_URI = os.getenv('MONGO_URI')
 DATABASE_NAME = 'restaurant_reviews'
 RESTAURANTS = 'restaurants'
 
-# 2. Create the connection
+
+# Creating the connection
 conn = pymongo.MongoClient(MONGO_URI)
 
-# 3. Query
-# doc = conn[DATABASE_NAME]["listingsAndReviews"].find({
-#     'address.country':'Canada'
-# }).limit(10)
-
-# for d in doc:
-#     print("Name:", d['name'])
-#     print("Price: $", d['price'])
-#     print('-------')
 
 # Flask Routes Begin Here
 @app.route('/')
 def index():
-    return render_template('index.template.html')
+    return render_template('index.html')
+
 
 #Route to show existing restaurants in Mongo
 @app.route('/restaurants')
 def restaurants():
-    # Fetch all the existing todos as a Python dictionary
+    """Fetch all the existing restaurants as a Python dictionary"""
     results = conn[DATABASE_NAME][RESTAURANTS].find({})
-    # Fetch all images stored and return them
-    all_images = conn[DATABASE_NAME]['image_url'].find({}); #1
-    #Return a template and assign the results to a placeholder in that template
+    """Fetch all images stored and return them"""
+    all_images = conn[DATABASE_NAME]['image_url'].find({});
+    """Return a template and assign the results to a placeholder in that template"""
     return render_template('restaurants.template.html', data=results, all_images=all_images)
 
 
-#Route to show the 'add/create restaurant' form    
-@app.route('/add_restaurant')
-def add_restaurant():
-    return render_template('add-restaurant.template.html')   
+#Route to show the 'create restaurant' form    
+@app.route('/new_restaurant')
+def create_new_restaurant():
+    return render_template('new_restaurant.html')   
 
     
-#Route to process the 'add/create restaurant' form
-@app.route('/add_restaurant', methods=['POST'])
-def process_add_restaurant():
+#Route to process the 'create restaurant' form
+@app.route('/new_restaurant', methods=['POST'])
+def process_new_restaurant():
     restaurant_name = request.form.get('restaurant_name')
     restaurant_address = request.form.get('restaurant_address')
     business_hours = request.form.get('business_hours')
     telephone = request.form.get('telephone')
     email_address = request.form.get('email_address')
-    image = request.files.get('image') #1 -- get the uploaded image
-    filename = images_upload_set.save(image) #2 -- save uploaded image    
+    """get the uploaded image"""
+    image = request.files.get('image')      
+    """save uploaded image"""
+    filename = images_upload_set.save(image)             
 
 
-    #Create a new restaurant
+    """Saving created restaurant in MongoDB"""
     conn[DATABASE_NAME][RESTAURANTS].insert({
         'restaurant_name': restaurant_name,
         'restaurant_address': restaurant_address,
         'business_hours': business_hours,
         'telephone': telephone,
         'email_address': email_address,
-        'image_url' : images_upload_set.url(filename) #3 save image url
+        """save image url"""
+        'image_url' : images_upload_set.url(filename) 
     })
 
     return redirect(url_for('index'))
 
 
 
-#Route to show a restaurant's reviews on a new page
+#Route to show an individual restaurant's reviews on a new page
 @app.route('/reviews/<restaurant_id>')
 def get_restaurant_reviews(restaurant_id):
     result = conn[DATABASE_NAME][RESTAURANTS].find_one({
         '_id': ObjectId(restaurant_id)
     })
     # print(result)
-    return render_template("restaurant_reviews.template.html", result=result)    
+    return render_template("restaurant_reviews.html", result=result)    
 
 
 
-# "magic code" -- boilerplate
+#Flask "magic code" -- boilerplate
 if __name__ == '__main__':
    app.run(host=os.environ.get('IP'),
            port=int(os.environ.get('PORT')),
