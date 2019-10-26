@@ -40,7 +40,7 @@ def index():
 
 #Route to show existing restaurants in Mongo
 @app.route('/restaurants')
-def restaurants():
+def view_restaurants():
     """Fetch all the existing restaurants as a Python dictionary"""
     results = conn[DATABASE_NAME][RESTAURANTS].find({})
     """Fetch all images stored and return them"""
@@ -84,7 +84,7 @@ def process_new_restaurant():
     return redirect(url_for('index'))
 
 
-"""Route to display a selected restaurant for updating"""
+#Route to display a selected restaurant for updating
 @app.route('/restaurant/<restaurant_id>/update')
 def update_restaurant(restaurant_id):
     
@@ -96,7 +96,7 @@ def update_restaurant(restaurant_id):
     return render_template('update_restaurant.html', data=result)
     
 
-"""Route to process selected restaurant data for updating"""
+#Route to process selected restaurant data for updating
 @app.route('/restaurant/<restaurant_id>/update', methods=['POST'])
 def process_update_restaurant(restaurant_id):
     
@@ -125,9 +125,32 @@ def process_update_restaurant(restaurant_id):
     })
     
     """redirect to restaurant listing route"""
-    return redirect(url_for('restaurants'))
+    return redirect(url_for('view_restaurant'))
     
     
+#Route to confirm if restaurant should be deleted
+@app.route('/restaurant/<restaurant_id>/confirm_delete')
+def confirm_delete_restaurant(restaurant_id):
+    result = conn[DATABASE_NAME][RESTAURANTS].find_one({
+        '_id': ObjectId(restaurant_id)
+    })
+    return render_template('confirm_delete_restaurant.html', data=result)
+    
+
+#Route to process with actual restaurant deletion
+@app.route('/restaurant/<restaurant_id>/delete')
+def process_delete_restaurant(restaurant_id):
+    
+    result = conn[DATABASE_NAME][RESTAURANTS].find_one({
+        '_id': ObjectId(restaurant_id)
+    })
+    
+    conn[DATABASE_NAME][RESTAURANTS].delete_one({
+        '_id': ObjectId(restaurant_id)
+    })
+    
+    flash("Restaurant {} has been deleted".format(result['restaurant_name']))
+    return redirect(url_for('view_restaurants'))
 
 
 #Route to show an individual restaurant's reviews on a new page

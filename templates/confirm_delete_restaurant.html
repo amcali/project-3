@@ -1,0 +1,25 @@
+{%extends "layout.template.html"%}
+
+{% block title %}HOME PAGE{% endblock %}
+
+
+{%block content%}
+
+    <a href ="/restaurants">Restaurants</a> |
+    <a href={{url_for('create_new_restaurant')}}>Add Restaurant</a> |
+
+    <div class="container">
+    <div class="alert alert-danger">
+        <form action="{{url_for('process_delete_restaurant', restaurant_id=data['_id'])}}">
+            Are you sure you want to delete {{data['restaurant_name']}}?
+            <div>
+            <input type="submit" class="btn btn-primary" value="Yes">
+            <a href='{{url_for('view_restaurants')}}'>No</a>
+            </div>
+
+        </form>
+    </div>        
+    </div>
+    
+
+{%endblock%}        
