@@ -17,6 +17,19 @@
     <h1>{% block title %}{% endblock %}</h1>
     
     <div class="container">
+
+      	{% with messages = get_flashed_messages() %}
+    	  {% if messages %}
+    	    {% for message in messages %}
+    		  <div class="alert alert-success">
+    		  <ul>
+      			<li>{{message}}</li>
+    		  </div>
+      		{% endfor %}
+      	  {% endif %}
+      	{% endwith %}
+
+      	
         {%block content%}{%endblock%}
     </div>
     <!-- Optional JavaScript -->

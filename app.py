@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 import pymongo 
 import os
@@ -7,7 +7,8 @@ from bson.objectid import ObjectId
 
 
 app = Flask(__name__)
-
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 
 #configure uploads
 TOP_LEVEL_DIR = os.path.abspath(os.curdir)
@@ -78,6 +79,8 @@ def process_new_restaurant():
         'image_url' : images_upload_set.url(filename)
     })
 
+    flash(restaurant_name + " successfully created.")
+    
     return redirect(url_for('index'))
 
 
