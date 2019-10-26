@@ -2,9 +2,12 @@
 
 {% block title %}RESTAURANT LISTINGS{% endblock %}
 
+
+
 {%block content%}
-    <a href ="/">Home</a> 
-    <a href ={{url_for('create_new_restaurant')}}>Add Restaurant</a>
+    <a href ="/">Home</a> |
+    <a href ={{url_for('create_new_restaurant')}}>Add Restaurant</a> |
+
     
     {% for d in data %}
     <div class="row">
@@ -17,14 +20,16 @@
             <image src="{{d['image_url']}}" class="card-img-top"> 
             <div class="card-body">
                 <!--{% if d['restaurant_address'] %}-->
-                <p>{{ d['restaurant_address']}}</p>
+                <p>{{d['restaurant_address']}}</p>
                 <p>{{d['business_hours']}}</p>
                 <p>{{d['telephone']}}</p>
                 <p>{{d['email_address']}}</p>
                 <!--{% else %}-->
                 <!--<span class='default-description'>No description available</span>-->
                 <!--{% endif %}-->
+            <a href="{{url_for('update_restaurant', restaurant_id=d['_id'])}}" class="btn btn-primary">Update Restaurant</a>                  
             </div>
+          
         <!--<div class="card-footer"></div>-->
         </div>
     {% endfor %}                

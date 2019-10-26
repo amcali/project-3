@@ -51,7 +51,7 @@ def restaurants():
 #Route to show the 'create restaurant' form    
 @app.route('/restaurant/new')
 def create_new_restaurant():
-    return render_template('new_restaurant.html')   
+    return render_template('new_restaurant.html', data={})   
 
     
 #Route to process the 'create restaurant' form
@@ -75,8 +75,7 @@ def process_new_restaurant():
         'business_hours': business_hours,
         'telephone': telephone,
         'email_address': email_address,
-        """save image url"""
-        'image_url' : images_upload_set.url(filename) 
+        'image_url' : images_upload_set.url(filename)
     })
 
     return redirect(url_for('index'))
@@ -92,6 +91,39 @@ def update_restaurant(restaurant_id):
     })
     """rendering template with existing information on selected restaurant"""
     return render_template('update_restaurant.html', data=result)
+    
+
+"""Route to process selected restaurant data for updating"""
+@app.route('/restaurant/<restaurant_id>/update', methods=['POST'])
+def process_update_restaurant(restaurant_id):
+    
+    restaurant_name = request.form.get('restaurant_name')
+    restaurant_address = request.form.get('restaurant_address')
+    business_hours = request.form.get('business_hours')
+    telephone = request.form.get('telephone')
+    email_address = request.form.get('email_address')
+    """get the uploaded image"""
+    image = request.files.get('image')      
+    """save uploaded image"""
+    filename = images_upload_set.save(image)  
+    
+    """Using Mongo database to update the document"""
+    conn[DATABASE_NAME][RESTAURANTS].update({
+        '_id': ObjectId(restaurant_id)        
+    },{
+        '$set': {
+            'restaurant_name': restaurant_name,
+            'restaurant_address': restaurant_address,
+            'business_hours': business_hours,
+            'telephone': telephone,
+            'email_address': email_address,
+            'image_url' : images_upload_set.url(filename)
+            } 
+    })
+    
+    """redirect to restaurant listing route"""
+    return redirect(url_for('restaurants'))
+    
     
 
 
